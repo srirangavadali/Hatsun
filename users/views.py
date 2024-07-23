@@ -1,11 +1,17 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import login
-from django.urls import reverse_lazy
+# views.py
+
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
-from django.template.loader import render_to_string
+from django.contrib.auth import login
+from django.shortcuts import redirect, render
+from django.views import generic
+from django.urls import reverse_lazy
+from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .models import CustomUser
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
     LoginView,
     LogoutView,
@@ -16,10 +22,8 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView
 )
-from django.contrib.auth.decorators import login_required
-from django.views import generic
-from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser
+import environ
+env = environ.Env()
 
 class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm
@@ -39,7 +43,8 @@ class SignUpView(generic.CreateView):
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': default_token_generator.make_token(user),
         })
-        user.email_user(subject, message)
+        from_email = "webmaster@example.com" #"sriranga451@gmail.com"  # Will use DEFAULT_FROM_EMAIL from settings
+        user.email_user(subject, message, from_email)
 
         return redirect(self.success_url)
 
@@ -58,8 +63,7 @@ def activate(request, uidb64, token):
     else:
         return render(request, 'users/account_activation_invalid.html')
 
-
-class UserProfileView(LoginRequiredMixin,generic.UpdateView):
+class UserProfileView(LoginRequiredMixin, generic.UpdateView):
     model = CustomUser
     form_class = CustomUserChangeForm
     template_name = 'users/profile.html'
@@ -71,15 +75,17 @@ class UserProfileView(LoginRequiredMixin,generic.UpdateView):
 class UserLoginView(LoginView):
     template_name = 'users/login.html'
 
-class UserLogoutView(LoginRequiredMixin,LogoutView):
-    template_name = 'users/logout.html'
-    success_url = reverse_lazy('users/login.html')
 
-class CustomPasswordChangeView(PasswordChangeView):
+class UserLogoutView(LogoutView):
+    template_name = 'users/logout.html'  # Optional: If you want to render a template
+    next_page = reverse_lazy('login')  # Redirect to login page after logout
+
+
+class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     template_name = 'users/change_password.html'
     success_url = reverse_lazy('password_change_done')
 
-class CustomPasswordChangeDoneView(PasswordChangeDoneView):
+class CustomPasswordChangeDoneView(LoginRequiredMixin, PasswordChangeDoneView):
     template_name = 'users/change_password_done.html'
 
 class CustomPasswordResetView(PasswordResetView):
@@ -97,6 +103,5 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'users/password_reset_complete.html'
 
-@login_required
-def dashboard(request):
-    return render(request, 'users/dashboard.html')
+class DashboardView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'users/dashboard.html'
