@@ -1,10 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <img src="{% static 'images/logo.jfif' %}" alt="Logo" class="logo" width=80" height="80" ;>
+            <h1>Welcome to myIoTGlobe!</h1>
+            <p>Connect, Communicate, Control & Manage your Scattered Devices - Centrally</p>
+        </div>
+        <div class="right-panel">
+            <h2>Login to Your Account</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_email">Email ID</label>
+                    <input type="email" name="username" id="id_email" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    <div class="password-container">
+                        <input type="password" name="password" id="id_password" required>
+                       <br> <input type="checkbox" onclick="myFunction()"> Show Password 
+                        </div>
+                        
+                </div>
+                <a href="{% url 'password_reset' %}" class="forgot-password-link">Forgot Password? Click Here</a>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+            <div class="footer">
+                <a href="#" class="footer-link">Terms & Conditions</a> •
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <p>Copyright © 2024 Techuva Solutions Pvt. Ltd. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        function myFunction() {
+          var x = document.getElementById("id_password");
+          if (x.type === "password") {
+            x.type = "text";
+          } else {
+            x.type = "password";
+          }
+        }
+        </script>
+</body>
 
-{% block content %}
-  <h2>Login Account</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-{% endblock %}
+</html>
