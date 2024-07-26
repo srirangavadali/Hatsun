@@ -24,7 +24,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',  # Our custom user app
     'rest_framework',
-    'products'
+    'products', #our custome app
+    'bootstrap4',
+     'django_forms_bootstrap',
+     
 ]
 
 MIDDLEWARE = [
