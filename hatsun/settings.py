@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'products', #our custome app
     'bootstrap4',
      'django_forms_bootstrap',
+         'bootstrap5',
      
 ]
 

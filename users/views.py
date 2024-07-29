@@ -87,7 +87,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('products/homepage')  # Redirect to a different page after login
+            return redirect('/products/homepage')  # Redirect to a different page after login
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})
