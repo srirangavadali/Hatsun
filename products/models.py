@@ -37,7 +37,7 @@ class ProductMaster(models.Model):
    
     class Meta:
         abstract=True
-        constraints =  [models.UniqueConstraint(fields=['name', 'inventory_type'], name='Unique Product')]
+        
 
 class Product(ProductMaster,BaseUserTrackedModel,BaseTimestampedModel):  #Product table
      def __str__(self):
