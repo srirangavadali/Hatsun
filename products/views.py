@@ -37,6 +37,14 @@ print(f"Device Time: {device_time}")
 @csrf_exempt
 #@login_required
 def convert_dump_data_to_model(request):
+    # dump_data={"id":"TU2HT0320240002" , "values":{"1":"-7.43" , "2":"-15.83"} , "deviceTime":"2024-08-08 18:26:55"}
     if request.method=='POST':
         dump_data=json.loads(request.body)
+        reading=TemperatureReading()
+        Device.name=dump_data['id']
+        Channel.objects.get(label=dump_data['values']['1'])
+        Channel.objects.get(label=dump_data['values']['1'])
+        reading.received_at=dump_data['deviceTime']
+      
+   
 

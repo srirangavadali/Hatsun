@@ -49,11 +49,7 @@ class InventoryMaster(models.Model):
     status=models.BooleanField(null=True, default=True)
     class Meta:
         abstract=True
-"""
-class Inventory(InventoryMaster,BaseUserTrackedModel,BaseTimestampedModel):
-     def __str__(self):
-        return f"{self.name}"
-"""
+
 class Device(InventoryMaster,BaseUserTrackedModel,BaseTimestampedModel):
      product = models.ForeignKey(Product,on_delete=models.CASCADE,null=False)
      def __str__(self):
