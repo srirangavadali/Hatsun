@@ -22,8 +22,8 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView
 )
-import environ
-env = environ.Env()
+#import environ
+#env = environ.Env()
 
 class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm

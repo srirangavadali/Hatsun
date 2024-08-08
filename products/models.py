@@ -49,11 +49,15 @@ class InventoryMaster(models.Model):
     status=models.BooleanField(null=True, default=True)
     class Meta:
         abstract=True
-
+"""
 class Inventory(InventoryMaster,BaseUserTrackedModel,BaseTimestampedModel):
      def __str__(self):
         return f"{self.name}"
-
+"""
+class Device(InventoryMaster,BaseUserTrackedModel,BaseTimestampedModel):
+     product = models.ForeignKey(Product,on_delete=models.CASCADE,null=False)
+     def __str__(self):
+        return f"{self.name}"
 
 class ChannelMaster(models.Model):
     number=models.SmallIntegerField(null=False)
@@ -61,6 +65,9 @@ class ChannelMaster(models.Model):
     is_display=models.BooleanField(null=True, default=True)
     display_order=models.SmallIntegerField(null=False)
     unit_of_measure=models.CharField(max_length=150, blank=True,null=True)
+    min_value=models.FloatField()
+    max_value=models.FloatField()
+    device=models.ForeignKey(Device,on_delete=models.CASCADE,null=False)
     class Meta:
         abstract=True
 
@@ -68,9 +75,16 @@ class Channel(ChannelMaster,BaseUserTrackedModel,BaseTimestampedModel):
     def __str__(self):
         return f"{self.label}"
 
+class TemperatureReading(models.Model):
+    value=models.FloatField()
+    received_at=models.DateTimeField()
+    channel=models.ForeignKey(Channel,on_delete=models.CASCADE,null=False)
+
+
+
 class Alert(models.Model):
     name=  models.CharField(max_length=150, blank=False)
-    connection_name=models.ForeignKey(Inventory,on_delete=models.CASCADE,null=False)
+    connection_name=models.ForeignKey(Device,on_delete=models.CASCADE,null=False)
     
 
 
